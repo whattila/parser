@@ -25,7 +25,7 @@ void parseCAFFHeader(caffFileData& caffData, CAFF& caff) {
 
     caff.numberOfAnimationBlocks = numberOfCiffs;
 
-    // a headerre nincs késõbb szükség, így törölhetjük
+    // a headerre nincs kÃ©sÅ‘bb szÃ¼ksÃ©g, Ã­gy tÃ¶rÃ¶lhetjÃ¼k
     caffData.erase(caffData.begin(), caffData.begin() + 29);
 }
 
@@ -48,7 +48,7 @@ void parseCAFFCredits(caffFileData& caffData, CAFF& caff) {
     string creator;
     for (uint64_t i = 0; i < creatorLength; i++) {
         char newChar = (char)caffData[23 + i];
-        if ((newChar >= 'A' && newChar <= 'Z') || (newChar >= 'a' && newChar <= 'z') || newChar == ' ' || newChar == '-')
+        if ((newChar >= 'A' && newChar <= 'Z') || (newChar >= 'a' && newChar <= 'z') || newChar == ' ' || newChar == '-' || newChar == '\'' || newChar == '.')
             creator += newChar;
         else
             throw invalid_argument("Invalid creator name!");
@@ -62,7 +62,7 @@ void parseCAFFCredits(caffFileData& caffData, CAFF& caff) {
 
     caff.creator = creator;
 
-    // a creditsre nincs késõbb szükség, így törölhetjük
+    // a creditsre nincs kÃ©sÅ‘bb szÃ¼ksÃ©g, Ã­gy tÃ¶rÃ¶lhetjÃ¼k
     // WARNING: conversion from 'uint64_t' to 'const int', possible loss of data
     caffData.erase(caffData.begin(), caffData.begin() + 23 + creatorLength);
 }
@@ -78,7 +78,7 @@ void parseCAFFAnimations(caffFileData& caffData, CAFF& caff) {
 
         uint64_t duration = get_uint64_t_from_bytes(caffData, 9);
 
-        // a caffData[17] a CIFF bájtok kezdete, caffData[17+ciffBlockSize] az elsõ ami már nem
+        // a caffData[17] a CIFF bÃ¡jtok kezdete, caffData[17+ciffBlockSize] az elsÅ‘ ami mÃ¡r nem
         ciffFileData ciffData;
         for (uint64_t i = 0; i < ciffBlockSize; i++)
             ciffData.push_back(caffData[17 + i]);
@@ -88,7 +88,7 @@ void parseCAFFAnimations(caffFileData& caffData, CAFF& caff) {
 
         caff.ciffBlocks.push_back(ciff);
 
-        // erre az animation blokkra nincs késõbb szükség, így törölhetjük
+        // erre az animation blokkra nincs kÃ©sÅ‘bb szÃ¼ksÃ©g, Ã­gy tÃ¶rÃ¶lhetjÃ¼k
         // WARNING: conversion from 'uint64_t' to 'const int', possible loss of data
         caffData.erase(caffData.begin(), caffData.begin() + 17 + ciffBlockSize);
     }
